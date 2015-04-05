@@ -1,15 +1,18 @@
 {
-  "name": "nodebb-plugin-quickstart",
+  "name": "nodebb-plugin-xeno-canto",
   "version": "0.0.0",
   "description": "",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/julianlam/nodebb-plugin-quickstart"
+    "url": "https://github.com/julianlam/nodebb-plugin-xeno-canto"
   },
   "keywords": [
     "nodebb",
-    "plugin"
+    "plugin",
+    "xeno-canto",
+    "birding",
+    "embed"
   ],
   "author": {
     "name": "Julian Lam",
@@ -17,7 +20,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/julianlam/nodebb-plugin-quickstart/issues"
+    "url": "https://github.com/julianlam/nodebb-plugin-xeno-canto/issues"
   },
   "readmeFilename": "README.md",
   "nbbpm": {

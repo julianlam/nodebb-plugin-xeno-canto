@@ -1,20 +1,13 @@
 {
-	"id": "nodebb-plugin-quickstart",
-	"url": "https://github.com/NodeBB/nodebb-plugin-quickstart",
+	"id": "nodebb-plugin-xeno-canto",
+	"url": "https://github.com/NodeBB/nodebb-plugin-xeno-canto",
 	"library": "./library.js",
 	"hooks": [
-		{ "hook": "static:app.load", "method": "init" },
-		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
-	],
-	"staticDirs": {
-		"static": "./static"
-	},
-	"less": [
-		"static/style.less"
-	],
-	"scripts": [
-		"static/lib/main.js",
-		"static/lib/admin.js"
-	],
-	"templates": "static/templates"
+		{ "hook": "filter:parse.raw", "method": "prepare", "priority": 4 },
+		{ "hook": "filter:parse.raw", "method": "parse", "priority": 6 },
+		{ "hook": "filter:parse.post", "method": "preparePost", "priority": 4 },
+		{ "hook": "filter:parse.post", "method": "parsePost", "priority": 6 },
+		{ "hook": "filter:parse.signature", "method": "prepareSignature", "priority": 4 },
+		{ "hook": "filter:parse.signature", "method": "parseSignature", "priority": 6 }
+	]
 }

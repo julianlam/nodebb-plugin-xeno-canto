@@ -2,30 +2,53 @@
 
 var controllers = require('./lib/controllers'),
 
+	prepareRegex = /http:\/\/www\.xeno-canto\.org\/(\d+)/g,
+	parseRegex = /\[xeno-canto:(\d+)\]/g,
 	plugin = {};
 
-plugin.init = function(params, callback) {
-	var router = params.router,
-		hostMiddleware = params.middleware,
-		hostControllers = params.controllers;
-		
-	// We create two routes for every view. One API call, and the actual route itself.
-	// Just add the buildHeader middleware to your route and NodeBB will take care of everything for you.
+plugin.prepare = function(input, callback) {
+	var matches = input.match(prepareRegex),
+		appendString = matches ? matches.map(function(url) {
+			return '[xeno-canto:' + url.split('/').pop() + ']';
+		}) : matches,
+		output = input + (appendString ? ('\n' + appendString.join('')) : '');
 
-	router.get('/admin/plugins/quickstart', hostMiddleware.admin.buildHeader, controllers.renderAdminPage);
-	router.get('/api/admin/plugins/quickstart', controllers.renderAdminPage);
-
-	callback();
+	callback(null, output);
 };
 
-plugin.addAdminNavigation = function(header, callback) {
-	header.plugins.push({
-		route: '/plugins/quickstart',
-		icon: 'fa-tint',
-		name: 'Quickstart'
-	});
+plugin.parse = function(input, callback) {
+	callback(null, input.replace(parseRegex, function(match, embedId) {
+		return '<iframe src="http://www.xeno-canto.org/' + embedId + '/embed?simple=1" scrolling="no" frameborder="0" width="340" height="115"></iframe>';
+	}));
+};
 
-	callback(null, header);
+// McChicken please
+var chickenWrapper = function(method, data, target, type, callback) {
+	plugin[method](target, function(err, parsed) {
+		if (err) {
+			return callback(err);
+		}
+
+		if (type === 'post') {
+			data.postData.content = parsed;
+		} else if (type === 'signature') {
+			data.userData.signature = parsed;
+		}
+
+		callback(null, data);
+	});
+}
+plugin.preparePost = function(data, callback) {
+	chickenWrapper('prepare', data, data.postData.content, 'post', callback);
+};
+plugin.prepareSignature = function(data, callback) {
+	chickenWrapper('prepare', data, data.userData.signature, 'signature', callback);
+};
+plugin.parsePost = function(data, callback) {
+	chickenWrapper('parse', data, data.postData.content, 'post', callback);
+};
+plugin.parseSignature = function(data, callback) {
+	chickenWrapper('parse', data, data.userData.signature, 'signature', callback);
 };
 
 module.exports = plugin;
