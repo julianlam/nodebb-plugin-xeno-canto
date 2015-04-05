@@ -1,7 +1,7 @@
 {
   "name": "nodebb-plugin-xeno-canto",
   "version": "0.0.0",
-  "description": "",
+  "description": "Xeno-canto embed plugin -- http://www.xeno-canto.org",
   "main": "library.js",
   "repository": {
     "type": "git",
